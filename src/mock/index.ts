@@ -20,7 +20,7 @@ if (isDev) {
   import('./api/index/test');
 
   Mockjs.setup({
-    timeout: 800
+    timeout: 800,
   });
 
   console.log('mock initial complete!');

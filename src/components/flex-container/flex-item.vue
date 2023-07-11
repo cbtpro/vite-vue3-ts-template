@@ -38,6 +38,7 @@ withDefaults(defineProps<IFlexProps>(), {
   flex: 1;
   width: 100%;
   min-width: calc((100% - v-bind(gap)) / v-bind(flexColumn));
+  // min-width: 400px;
   box-sizing: border-box;
 }
 </style>

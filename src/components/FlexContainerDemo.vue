@@ -17,25 +17,36 @@
 <script setup lang="ts">
 import FlexContainer from '@/components/flex-container/index.vue';
 import FlexItem from '@/components/flex-container/flex-item.vue';
+import ECharts from '@/components/echarts/index.vue';
 </script>
 
 <template>
   <div class="container">
     <flex-container>
       <flex-item>
-        <div class="box1"></div>
+        <div class="box1">
+          <ECharts title="demo1" />
+        </div>
       </flex-item>
       <flex-item>
-        <div class="box2"></div>
+        <div class="box2">
+          <ECharts title="demo2" />
+        </div>
       </flex-item>
       <flex-item>
-        <div class="box3"></div>
+        <div class="box3">
+          <ECharts />
+        </div>
       </flex-item>
       <flex-item>
-        <div class="box3"></div>
+        <div class="box3">
+          <ECharts />
+        </div>
       </flex-item>
       <flex-item>
-        <div class="box3"></div>
+        <div class="box3">
+          <ECharts />
+        </div>
       </flex-item>
     </flex-container>
   </div>
@@ -44,20 +55,13 @@ import FlexItem from '@/components/flex-container/flex-item.vue';
 <style lang="less" scoped>
 .container {
   width: 100%;
-}
-.box1 {
-  width: 100%;
-  height: 200px;
-  background-color: #e7e7e7;
-}
-.box2 {
-  width: 100%;
-  height: 200px;
-  background-color: orange;
-}
-.box3 {
-  width: 100%;
-  height: 200px;
-  background-color: blue;
+  .box1,
+  .box2,
+  .box3,
+  .box4 {
+    width: 100%;
+    height: 400px;
+    border: 1px solid #e7e7e7;
+  }
 }
 </style>

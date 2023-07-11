@@ -18,12 +18,17 @@
 import { FlexGap, FlexColumn } from '@/constants/flex';
 
 export interface IFlexProps {
+  /** flex的gap属性 */
   gap?: string;
+  /** 每行显示几列 */
   flexColumn?: number;
+  /** 最小宽度 */
+  minWidth?: string;
 }
 withDefaults(defineProps<IFlexProps>(), {
   gap: FlexGap,
   flexColumn: FlexColumn,
+  minWidth: '375px',
 });
 </script>
 
@@ -36,9 +41,8 @@ withDefaults(defineProps<IFlexProps>(), {
 <style lang="less" scoped>
 .flex-item {
   flex: 1;
-  width: 100%;
-  min-width: calc((100% - v-bind(gap)) / v-bind(flexColumn));
-  // min-width: 400px;
+  width: calc((100% - v-bind(gap)) / v-bind(flexColumn));
+  min-width: v-bind(minWidth);
   box-sizing: border-box;
 }
 </style>

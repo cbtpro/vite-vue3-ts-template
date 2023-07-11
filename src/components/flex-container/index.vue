@@ -38,5 +38,6 @@ withDefaults(defineProps<IFlexContainerProps>(), {
   flex-wrap: wrap;
   justify-content: flex-start;
   gap: v-bind(gap);
+  width: 100%;
 }
 </style>

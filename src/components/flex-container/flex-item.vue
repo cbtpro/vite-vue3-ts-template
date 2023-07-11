@@ -35,10 +35,9 @@ withDefaults(defineProps<IFlexProps>(), {
 
 <style lang="less" scoped>
 .flex-item {
-  flex: 1 1 auto;
-  min-width: 200px;
-  width: calc((100% - v-bind(gap)) / v-bind(flexColumn));
-  border: 1px solid red;
+  flex: 1;
+  width: 100%;
+  min-width: calc((100% - v-bind(gap)) / v-bind(flexColumn));
   box-sizing: border-box;
 }
 </style>

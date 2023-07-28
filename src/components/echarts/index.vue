@@ -16,6 +16,7 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue';
+import { useThrottleFn } from '@vueuse/core'
 import * as echarts from 'echarts/core';
 import { BarChart, LineChart } from 'echarts/charts';
 import {
@@ -70,13 +71,42 @@ echarts.use([
 const props = withDefaults(defineProps<{ title?: string }>(), {
   title: 'ECharts 入门示例',
 });
+
+interface IData {
+  name: string;
+  value: number;
+}
+const chartsCurrentData = ref<IData | undefined>();
 const option: ECOption = {
   title: {
     text: props.title,
   },
+  tooltip: {
+    // trigger: 'axis',
+    formatter: (params) => {
+      try {
+        if (Array.isArray(params)) {
+          const [data] = params;
+          const { name, value } = data;
+          chartsCurrentData.value = { name, value };
+        } else {
+          const { name, value } = params;
+          chartsCurrentData.value = { name, value };
+        }
+      } catch (err) {
+        console.log(err);
+      }
+      return 1;
+    },
+  },
+  axisPointer: {
+    show: true,
+    type: 'shadow',
+  },
   xAxis: {
     type: 'category',
     data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    triggerEvent: true,
   },
   yAxis: {
     type: 'value',
@@ -95,18 +125,41 @@ const echartsRef = ref<HTMLDivElement>();
 let myCharts: echarts.ECharts;
 const initECharts = () => {
   if (echartsRef.value) {
-    myCharts = echarts.init(echartsRef.value);
+    myCharts = echarts.init(echartsRef.value, null, {
+      renderer: 'canvas',
+    });
     if (myCharts) {
       myCharts.setOption(option);
+      myCharts.on('click', (e) => {
+        console.log(e);
+      });
+      // 鼠标滑过时变成小手
+      myCharts.getZr().on('mousemove', param => {
+        const pointInPixel= [param.offsetX, param.offsetY];
+        if (myCharts.containPixel('grid',pointInPixel)) {//若鼠标滑过区域位置在当前图表范围内 鼠标设置为小手
+          myCharts.getZr().setCursorStyle('pointer')
+        }else{
+          myCharts.getZr().setCursorStyle('default')
+        }
+      })
+      // 点击区域增大
+      myCharts.getZr().on('click', params=>{
+        const pointInPixel= [params.offsetX, params.offsetY];
+        if (myCharts.containPixel('grid',pointInPixel)) {
+          const { name, value } = chartsCurrentData.value;
+          // 点击的逻辑
+          console.log(name, value);
+        }
+      })
     }
   }
 };
 
-const resizeHandle = () => {
+const resizeHandle = useThrottleFn(() => {
   if (myCharts) {
     myCharts.resize();
   }
-};
+}, 100);
 const initEvents = () => {
   window.addEventListener('resize', resizeHandle);
 };
@@ -127,6 +180,10 @@ const removeEvents = () => {
 onUnmounted(() => {
   destroyECharts();
   removeEvents();
+});
+
+defineExpose({
+  myCharts,
 });
 </script>
 

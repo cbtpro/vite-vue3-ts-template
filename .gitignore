@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 /.history
+.lightly
+.c_bin
+.classes

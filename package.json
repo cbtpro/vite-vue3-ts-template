@@ -10,6 +10,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@vueuse/core": "^10.2.1",
     "default-passive-events": "^2.0.0",
     "echarts": "^5.4.2",
     "less": "^4.1.3",

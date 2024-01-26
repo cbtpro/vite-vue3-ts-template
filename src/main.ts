@@ -3,6 +3,17 @@ import 'default-passive-events';
 import '@/style.css';
 import App from '@/App.vue';
 
-import '@/mock';
+async function prepareApp() {
+  if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
+    const { worker } = await import('./mocks/browser');
+    return worker.start();
+  }
 
-createApp(App).mount('#app');
+  return Promise.resolve();
+}
+
+const app = createApp(App);
+
+prepareApp().then(() => {
+  app.mount('#app');
+});

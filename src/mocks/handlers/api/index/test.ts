@@ -12,16 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import Mock from 'mock2js';
-import { builder } from '@/mock/build';
+import { http, HttpResponse } from 'msw';
+import { builder } from '@/mocks/build';
 
-const response = (options: IMockRequestOptions) => {
-  const { body } = options;
-  const { username } = JSON.parse(body);
-  return builder<ITest>({
-    message: `你好，${username}`,
-    now: Date.now(),
-  });
-};
-
-Mock.mock(/\/api\/index\/test/, 'get', response);
+export const test = http.get(/\/api\/index\/test/, (options, ...rest) => {
+  console.log(options, rest);
+  const url = new window.URL(options.request.url);
+  const params = new window.URLSearchParams(url.search);
+  // 获取请求参数
+  const username = params.get('username');
+  return HttpResponse.json(
+    builder<ITest>({
+      message: `你好，${username}`,
+      now: Date.now(),
+    }),
+  );
+});

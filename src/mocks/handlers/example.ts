@@ -1,4 +1,4 @@
-// Copyright 2021 cbtpro
+// Copyright 2023 Peter Chen
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,17 +11,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import { http, HttpResponse } from 'msw';
 
-import Mockjs from 'mock2js';
-import { isDev } from '@/config';
-
-if (isDev) {
-  import('./api/index/authority');
-  import('./api/index/test');
-
-  Mockjs.setup({
-    timeout: 800,
+export const example = http.get('https://api.example.com/user', () => {
+  return HttpResponse.json({
+    firstName: 'John',
+    lastName: 'Maverick',
   });
-
-  console.log('mock initial complete!');
-}
+});

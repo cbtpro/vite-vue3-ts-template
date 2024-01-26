@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue';
-import { useThrottleFn } from '@vueuse/core'
+import { useThrottleFn } from '@vueuse/core';
 import * as echarts from 'echarts/core';
 import { BarChart, LineChart } from 'echarts/charts';
 import {
@@ -43,6 +43,7 @@ import type {
   DatasetComponentOption,
 } from 'echarts/components';
 import type { ComposeOption } from 'echarts/core';
+import { useApi } from '@/api';
 
 // 通过 ComposeOption 来组合出一个只有必须组件和图表的 Option 类型
 type ECOption = ComposeOption<
@@ -76,6 +77,34 @@ interface IData {
   name: string;
   value: number;
 }
+
+const { request } = useApi();
+
+const xAxisData = ref(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
+const yAxisData = ref([0, 0, 0, 0, 0, 0, 0]);
+
+const getEchartsData = () => {
+  return new Promise<IResponseBody<number[]>>((resolve, reject) => {
+    request<number[]>({
+      url: '/index/echarts',
+      method: 'GET',
+    })
+      .then(response => {
+        resolve(response);
+      })
+      .catch(error => {
+        reject(error);
+      });
+  });
+};
+const loadData = async () => {
+  const { data } = await getEchartsData();
+  yAxisData.value = data;
+  refreshChartsData();
+};
+
+loadData();
+
 const chartsCurrentData = ref<IData | undefined>();
 const option: ECOption = {
   title: {
@@ -83,20 +112,20 @@ const option: ECOption = {
   },
   tooltip: {
     // trigger: 'axis',
-    formatter: (params) => {
+    formatter: params => {
       try {
         if (Array.isArray(params)) {
           const [data] = params;
           const { name, value } = data;
-          chartsCurrentData.value = { name, value };
+          chartsCurrentData.value = { name, value } as IData;
         } else {
           const { name, value } = params;
-          chartsCurrentData.value = { name, value };
+          chartsCurrentData.value = { name, value } as IData;
         }
       } catch (err) {
         console.log(err);
       }
-      return 1;
+      return '';
     },
   },
   axisPointer: {
@@ -105,7 +134,7 @@ const option: ECOption = {
   },
   xAxis: {
     type: 'category',
-    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    data: xAxisData.value,
     triggerEvent: true,
   },
   yAxis: {
@@ -113,7 +142,7 @@ const option: ECOption = {
   },
   series: [
     {
-      data: [820, 932, 901, 934, 1290, 1330, 1320],
+      data: yAxisData.value,
       type: 'line',
       smooth: true,
     },
@@ -122,36 +151,52 @@ const option: ECOption = {
 
 const echartsRef = ref<HTMLDivElement>();
 
-let myCharts: echarts.ECharts;
+let myCharts: echarts.ECharts | null = null;
 const initECharts = () => {
   if (echartsRef.value) {
-    myCharts = echarts.init(echartsRef.value, null, {
+    myCharts = echarts.init(echartsRef.value, undefined, {
       renderer: 'canvas',
     });
     if (myCharts) {
       myCharts.setOption(option);
-      myCharts.on('click', (e) => {
+      myCharts.on('click', e => {
         console.log(e);
       });
       // 鼠标滑过时变成小手
       myCharts.getZr().on('mousemove', param => {
-        const pointInPixel= [param.offsetX, param.offsetY];
-        if (myCharts.containPixel('grid',pointInPixel)) {//若鼠标滑过区域位置在当前图表范围内 鼠标设置为小手
-          myCharts.getZr().setCursorStyle('pointer')
-        }else{
-          myCharts.getZr().setCursorStyle('default')
+        const pointInPixel = [param.offsetX, param.offsetY];
+        if (myCharts?.containPixel('grid', pointInPixel)) {
+          //若鼠标滑过区域位置在当前图表范围内 鼠标设置为小手
+          myCharts.getZr().setCursorStyle('pointer');
+        } else {
+          myCharts?.getZr().setCursorStyle('default');
         }
-      })
+      });
       // 点击区域增大
-      myCharts.getZr().on('click', params=>{
-        const pointInPixel= [params.offsetX, params.offsetY];
-        if (myCharts.containPixel('grid',pointInPixel)) {
-          const { name, value } = chartsCurrentData.value;
+      myCharts.getZr().on('click', params => {
+        const pointInPixel = [params.offsetX, params.offsetY];
+        if (myCharts?.containPixel('grid', pointInPixel)) {
+          const { name, value } = chartsCurrentData.value as IData;
           // 点击的逻辑
           console.log(name, value);
         }
-      })
+      });
     }
+  }
+};
+
+const refreshChartsData = () => {
+  if (myCharts) {
+    myCharts.setOption({
+      xAxis: {
+        data: xAxisData.value,
+      },
+      series: [
+        {
+          data: yAxisData.value,
+        },
+      ],
+    });
   }
 };
 
@@ -163,6 +208,7 @@ const resizeHandle = useThrottleFn(() => {
 const initEvents = () => {
   window.addEventListener('resize', resizeHandle);
 };
+
 onMounted(() => {
   initECharts();
   initEvents();
@@ -184,6 +230,7 @@ onUnmounted(() => {
 
 defineExpose({
   myCharts,
+  refreshChartsData,
 });
 </script>
 

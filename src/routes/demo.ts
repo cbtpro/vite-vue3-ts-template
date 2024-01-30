@@ -20,6 +20,11 @@ const demos: RouteRecordRaw = {
       path: '/demo/flex-container-demo',
       component: () => import('@/views/demo/flex-container-demo.vue'),
     },
+    {
+      name: 'html2canvas-demo',
+      path: '/demo/html2canvas-demo',
+      component: () => import('@/views/demo/html2canvas-demo/index.vue'),
+    },
   ],
 };
 

@@ -19,6 +19,10 @@ const menus = ref([
     name: 'Flex Demo',
     to: '/demo/flex-container-demo',
   },
+  {
+    name: 'html2canvas-demo',
+    to: '/demo/html2canvas-demo',
+  },
 ]);
 </script>
 

@@ -35,8 +35,8 @@ const defaultStyles: CSSProperties = {
   visibility: 'hidden',
   alignItems: 'center',
 };
-type MeasureText = (str: string, styles?: CSSProperties) => number;
-const measureText: MeasureText = (str = '', styles = defaultStyles) => {
+type MeasureText = (str: string, styles: CSSProperties) => number;
+const measureText: MeasureText = (str = '', styles) => {
   const dom = document.createElement('span');
   dom.innerText = str;
   Object.keys(styles).forEach(styleName => {
@@ -54,11 +54,11 @@ const measureText: MeasureText = (str = '', styles = defaultStyles) => {
   }
   return width;
 };
-type FitString = (str: string, maxWidth: number) => string;
-const fitString: FitString = (str, maxWidth) => {
-  let width = measureText(str);
+type FitString = (str: string, maxWidth: number, styles?: CSSProperties) => string;
+export const fitString: FitString = (str, maxWidth, styles = defaultStyles) => {
+  let width = measureText(str, styles);
   const ellipsis = '…';
-  const ellipsisWidth = measureText(ellipsis);
+  const ellipsisWidth = measureText(ellipsis, styles);
   if (width <= maxWidth || width <= ellipsisWidth) {
     return str;
   }
@@ -66,13 +66,9 @@ const fitString: FitString = (str, maxWidth) => {
   const index = binarySearch({
     max: str.length,
     getValue: guess => {
-      return measureText(str.substring(0, guess));
+      return measureText(str.substring(0, guess), styles);
     },
     match: maxWidth - ellipsisWidth,
   });
   return str.substring(0, index) + ellipsis;
 };
-
-const text = `怒发冲冠，凭阑处、潇潇雨歇。抬望眼，仰天长啸，壮怀激烈。三十功名尘与土，八千里路云和月。莫等闲，白了少年头，空悲切。
-  　　靖康耻，犹未雪；臣子恨，何时灭？驾长车，踏破贺兰山缺。壮志饥餐胡虏肉，笑谈渴饮匈奴血。待从头，收拾旧山河，朝天阙。`;
-fitString(text, 100);

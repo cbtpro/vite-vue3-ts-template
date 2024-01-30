@@ -1,4 +1,5 @@
 import { createApp } from 'vue';
+import { createPinia } from 'pinia';
 import 'default-passive-events';
 import '@/style.css';
 import App from '@/App.vue';
@@ -12,9 +13,10 @@ async function prepareApp() {
 
   return Promise.resolve();
 }
-
+const pinia = createPinia();
 const app = createApp(App);
 app.use(router);
+app.use(pinia);
 prepareApp().then(() => {
   app.mount('#app');
 });

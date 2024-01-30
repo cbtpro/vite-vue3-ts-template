@@ -1,18 +1,22 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { storeToRefs } from 'pinia';
+import { useDemoStore } from '@/stores/demo';
 
 // defineProps<{ msg: string }>();
 const route = useRoute();
 const msg = ref(route.query.msg || 'Vite + Vue');
-const count = ref(0);
+const store = useDemoStore();
+const { count } = storeToRefs(store);
+const { increment } = store;
 </script>
 
 <template>
   <h1>消息：{{ msg }}</h1>
 
   <div class="card">
-    <button type="button" @click="count++">count is {{ count }}</button>
+    <button type="button" @click="increment">count is {{ count }}</button>
     <p>
       Edit
       <code>components/HelloWorld.vue</code> to test HMR

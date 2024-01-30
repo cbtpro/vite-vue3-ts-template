@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 import 'default-passive-events';
 import '@/style.css';
 import App from '@/App.vue';
+import router from '@/routes';
 
 async function prepareApp() {
   if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
@@ -13,7 +14,7 @@ async function prepareApp() {
 }
 
 const app = createApp(App);
-
+app.use(router);
 prepareApp().then(() => {
   app.mount('#app');
 });

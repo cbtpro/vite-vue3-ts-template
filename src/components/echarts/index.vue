@@ -15,7 +15,7 @@
 -->
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue';
+import { nextTick, onMounted, onUnmounted, ref } from 'vue';
 import { useThrottleFn } from '@vueuse/core';
 import * as echarts from 'echarts/core';
 import { BarChart, LineChart } from 'echarts/charts';
@@ -210,8 +210,10 @@ const initEvents = () => {
 };
 
 onMounted(() => {
-  initECharts();
-  initEvents();
+  nextTick(() => {
+    initECharts();
+    initEvents();
+  });
 });
 
 const destroyECharts = () => {

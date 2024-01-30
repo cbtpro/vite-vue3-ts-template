@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useRoute } from 'vue-router';
 
-defineProps<{ msg: string }>();
-
+// defineProps<{ msg: string }>();
+const route = useRoute();
+const msg = ref(route.query.msg || 'Vite + Vue');
 const count = ref(0);
 </script>
 
 <template>
-  <h1>{{ msg }}</h1>
+  <h1>消息：{{ msg }}</h1>
 
   <div class="card">
     <button type="button" @click="count++">count is {{ count }}</button>

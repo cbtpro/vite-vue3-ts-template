@@ -1,6 +1,7 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import 'default-passive-events';
+import '@/assets/base.less';
 import '@/style.css';
 import App from '@/App.vue';
 import router from '@/routes';

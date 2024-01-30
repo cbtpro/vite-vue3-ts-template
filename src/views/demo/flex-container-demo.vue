@@ -18,6 +18,10 @@
 import FlexContainer from '@/components/flex-container/index.vue';
 import FlexItem from '@/components/flex-container/flex-item.vue';
 import ECharts from '@/components/echarts/index.vue';
+
+defineOptions({
+  name: 'flex-container-demo',
+});
 </script>
 
 <template>
@@ -55,6 +59,7 @@ import ECharts from '@/components/echarts/index.vue';
 <style lang="less" scoped>
 .container {
   width: 100%;
+
   .box1,
   .box2,
   .box3,

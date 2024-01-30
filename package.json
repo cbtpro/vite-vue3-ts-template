@@ -14,8 +14,11 @@
     "axios": "^1.6.7",
     "default-passive-events": "^2.0.0",
     "echarts": "^5.4.3",
+    "html2canvas": "^1.4.1",
     "less": "^4.2.0",
-    "vue": "^3.4.15"
+    "pinia": "^2.1.7",
+    "vue": "^3.4.15",
+    "vue-router": "^4.2.5"
   },
   "devDependencies": {
     "@types/node": "^20.11.7",

@@ -41,8 +41,12 @@ export default defineConfig(() => {
         ],
         output: {
           manualChunks: {
+            // 将vue生态达成一个vue-bundle-xxx.js的包
+            'vue-bundle': ['vue', 'vue-router', 'pinia'],
             // 单独将echarts打一个包
             echarts: ['echarts'],
+            axios: ['axios'],
+            html2canvas: ['html2canvas'],
           },
         },
       },

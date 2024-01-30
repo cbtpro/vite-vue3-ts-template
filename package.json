@@ -5,7 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:test": "vite --mode=test",
+    "dev:pre": "vite --mode=pre",
+    "dev:prod": "vite --mode=prod",
     "build": "vue-tsc && vite build",
+    "build:test": "vue-tsc && vite build --mode=test",
+    "build:pre": "vue-tsc && vite build --mode=pre",
+    "build:prod": "vue-tsc && vite build --mode=prod",
     "preview": "vite preview",
     "prepare": "husky install"
   },

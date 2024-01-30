@@ -13,12 +13,12 @@ const demos: RouteRecordRaw = {
     {
       name: 'hello-world',
       path: '/demo/helo-world',
-      component: () => import('@/views/demo/HelloWorld.vue'),
+      component: () => import('@/views/demo/hello-world.vue'),
     },
     {
       name: 'flex-container-demo',
       path: '/demo/flex-container-demo',
-      component: () => import('@/views/demo/FlexContainerDemo.vue'),
+      component: () => import('@/views/demo/flex-container-demo.vue'),
     },
   ],
 };

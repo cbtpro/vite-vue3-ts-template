@@ -25,27 +25,27 @@ import ECharts from '@/components/echarts/index.vue';
     <flex-container>
       <flex-item>
         <div class="box1">
-          <ECharts title="demo1" />
+          <e-charts title="demo1" />
         </div>
       </flex-item>
       <flex-item>
         <div class="box2">
-          <ECharts title="demo2" />
+          <e-charts title="demo2" />
         </div>
       </flex-item>
       <flex-item>
         <div class="box3">
-          <ECharts />
+          <e-charts />
         </div>
       </flex-item>
       <flex-item>
         <div class="box3">
-          <ECharts />
+          <e-charts />
         </div>
       </flex-item>
       <flex-item>
         <div class="box3">
-          <ECharts />
+          <e-charts />
         </div>
       </flex-item>
     </flex-container>

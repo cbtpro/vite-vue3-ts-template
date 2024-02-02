@@ -11,18 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import { http, HttpResponse } from 'msw';
+import { builder } from '@/mocks/build';
 
-/**
- * 是开发环境
- */
-export const isDev = process.env.NODE_ENV === 'development';
-
-/**
- * 请求url前缀
- */
-export const BASE_URL = <string>import.meta.env.VITE_BASE_URL;
-
-export const AMAP_SECURITY_KEY = <string>import.meta.env.VITE_AMAP_SECURITY_KEY;
-
-export const DATE_FMT = 'YYYY-MM-DD';
-export const TIME_FMT = 'YYYY-MM-DD HH:mm:ss';
+export const pages = http.get(/api\/index\/pages/, () => {
+  return HttpResponse.json(builder<number[]>([820, 932, 901, 934, 1290, 1330, 1320]));
+});

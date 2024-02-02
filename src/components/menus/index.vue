@@ -23,6 +23,14 @@ const menus = ref([
     name: 'html2canvas-demo',
     to: '/demo/html2canvas-demo',
   },
+  {
+    name: 'virtual-scroller',
+    to: '/demo/virtual-scroller',
+  },
+  {
+    name: 'amap',
+    to: '/demo/amap',
+  },
 ]);
 </script>
 

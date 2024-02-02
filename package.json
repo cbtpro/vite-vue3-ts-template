@@ -13,9 +13,13 @@
     "build:pre": "vue-tsc && vite build --mode=pre",
     "build:prod": "vue-tsc && vite build --mode=prod",
     "preview": "vite preview",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "deploy": "npm run build && gh-pages -d dist",
+    "dotenv:pull": "npx dotenv-vault@latest pull"
   },
   "dependencies": {
+    "@amap/amap-jsapi-loader": "^1.0.1",
+    "@vuemap/amap-jsapi-loader": "^1.0.4",
     "@vueuse/core": "^10.7.2",
     "axios": "^1.6.7",
     "default-passive-events": "^2.0.0",
@@ -24,11 +28,14 @@
     "less": "^4.2.0",
     "pinia": "^2.1.7",
     "vue": "^3.4.15",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.2.5",
+    "vue-virtual-scroller": "^2.0.0-beta.8"
   },
   "devDependencies": {
+    "@amap/amap-jsapi-types": "^0.0.13",
     "@types/node": "^20.11.7",
     "@vitejs/plugin-vue": "^4.6.2",
+    "dotenv": "^16.4.1",
     "husky": "^8.0.3",
     "lint-staged": "^13.3.0",
     "mock2js": "^1.0.6",
@@ -37,6 +44,7 @@
     "rollup-plugin-visualizer": "^5.12.0",
     "typescript": "^5.3.3",
     "vite": "^4.5.2",
+    "vite-plugin-openinvscode": "^1.0.3",
     "vue-tsc": "^1.8.27"
   },
   "lint-staged": {

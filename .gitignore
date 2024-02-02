@@ -28,3 +28,7 @@ dist-ssr
 .c_bin
 .classes
 stats.html
+.env*
+.flaskenv*
+!.env.project
+!.env.vault

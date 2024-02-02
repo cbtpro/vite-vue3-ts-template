@@ -1,7 +1,11 @@
 import { fileURLToPath, URL } from 'node:url';
 import { defineConfig, ServerOptions } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import openInVscode from 'vite-plugin-openinvscode';
 import { visualizer } from 'rollup-plugin-visualizer';
+
+/** 如果是在codespace环境 */
+const isCodeSpaces = process.env.CODESPACES === 'true';
 
 const serverOptions: ServerOptions = {
   host: true,
@@ -26,7 +30,7 @@ export default defineConfig(() => {
   return {
     base: './',
     server: serverOptions,
-    plugins: [vue()],
+    plugins: [vue(), isCodeSpaces ? undefined : openInVscode()],
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),

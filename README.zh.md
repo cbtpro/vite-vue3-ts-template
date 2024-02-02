@@ -58,3 +58,14 @@ git rebase
 ```shell
 git push
 ```
+
+### 任务
+
+- env 支持 √
+- mock 支持 √
+- 地图支持
+- 增加 404 页面（外层和内层）
+- 虚拟滚动
+- 生成海报
+- 二维码
+- 添加@trivago/prettier-plugin-sort-imports 对引入进行排序

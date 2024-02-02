@@ -25,6 +25,16 @@ const demos: RouteRecordRaw = {
       path: '/demo/html2canvas-demo',
       component: () => import('@/views/demo/html2canvas-demo/index.vue'),
     },
+    {
+      name: 'virtual-scroller',
+      path: 'virtual-scroller',
+      component: () => import('@/views/demo/virtual-scroller/index.vue'),
+    },
+    {
+      name: 'amap',
+      path: 'amap',
+      component: () => import('@/views/demo/amap/index.vue'),
+    },
   ],
 };
 

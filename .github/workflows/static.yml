@@ -40,7 +40,7 @@ jobs:
           cache: 'npm' # ✅ 缓存 npm 依赖，加快安装速度
 
       - name: 安装依赖
-        run: npm i
+        run: npm ci # ✅ 推荐使用 ci 以避免 package-lock.json 变更
 
       - name: build项目
         run: npm run build:prod

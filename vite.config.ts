@@ -37,6 +37,10 @@ export default defineConfig(() => {
       },
     },
     build: {
+      /**
+       * @see https://rollupjs.org/configuration-options/#output-manualchunks
+       */
+      chunkSizeWarningLimit: 500,
       rollupOptions: {
         plugins: [
           visualizer({

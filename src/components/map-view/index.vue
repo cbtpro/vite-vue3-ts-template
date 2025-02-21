@@ -11,7 +11,7 @@ the specific language governing permissions and // limitations under the License
 </template>
 
 <script setup lang="ts">
-import { onUnmounted, onMounted, ref, nextTick } from 'vue';
+import { onUnmounted, onMounted } from 'vue';
 import AMapLoader from '@amap/amap-jsapi-loader';
 // import AMapLoader from '@vuemap/amap-jsapi-loader'
 import { AMAP_SECURITY_KEY } from '@/config';

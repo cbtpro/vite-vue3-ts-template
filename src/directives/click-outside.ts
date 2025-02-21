@@ -73,7 +73,7 @@ const clickOutside: Directive = {
       }
     }
   },
-  beforeUnmount(el, binding) {
+  beforeUnmount(el) {
     const elInNodeListIndex = nodeList.findIndex(item => {
       return item.el === el;
     });

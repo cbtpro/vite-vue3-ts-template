@@ -43,7 +43,10 @@ jobs:
         run: npm i
 
       - name: build项目
-        run: npm run build
+        run: npm run build:prod
+
+      - name: 检查 dist 目录是否存在
+        run: ls -l dist # ✅ 确保 dist 目录存在
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

@@ -15,7 +15,8 @@
     "preview": "vite preview",
     "prepare": "husky install",
     "deploy": "npm run build && gh-pages -d dist",
-    "dotenv:pull": "npx dotenv-vault@latest pull"
+    "dotenv:pull": "npx dotenv-vault@latest pull",
+    "preinstall": "npx only-allow pnpm"
   },
   "dependencies": {
     "@amap/amap-jsapi-loader": "^1.0.1",
@@ -56,7 +57,7 @@
     ]
   },
   "engines": {
-    "node": ">=14.20.1",
-    "npm": ">=6.14.17"
+    "node": ">=18.20.7",
+    "npm": ">=10.8.2"
   }
 }

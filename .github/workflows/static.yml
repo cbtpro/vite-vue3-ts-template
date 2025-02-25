@@ -13,9 +13,8 @@ on:
 permissions:
   pages: write # 允许写入 GitHub Pages
   id-token: write # 允许身份验证
-
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: 检出代码
@@ -43,11 +42,24 @@ jobs:
 
       - name: 检查 dist 目录是否存在
         run: ls -l dist # 确保 dist 目录存在
+    # Deploy job
+  deploy:
+    # Add a dependency to the build job
+    needs: build
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2 # 这里应该是 v2
-        with:
-          path: dist # 你的构建产物目录
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write # to deploy to Pages
+      id-token: write # to verify the deployment originates from an appropriate source
 
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    # Specify runner + deployment step
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v2 # 确保 deploy 还是 v2
+        id: deployment
+        uses: actions/deploy-pages@v4 # or specific "vX.X.X" version tag for this action

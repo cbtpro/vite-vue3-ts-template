@@ -11,23 +11,11 @@ on:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
-  contents: read
-  pages: write
-  id-token: write
-  actions: write # ✅ 添加这个，确保 deploy-pages 能正确访问 Actions
-
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
-concurrency:
-  group: 'pages'
-  cancel-in-progress: false
+  pages: write # 允许写入 GitHub Pages
+  id-token: write # 允许身份验证
 
 jobs:
-  # Single deploy job since we're just deploying
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: 检出代码
@@ -56,19 +44,10 @@ jobs:
       - name: 检查 dist 目录是否存在
         run: ls -l dist # 确保 dist 目录存在
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-pages-artifact@v2
         with:
-          name: github-pages # 添加 artifact_name，和 deploy-pages@v1 保持一致
-          path: 'dist'
+          path: dist # 你的构建产物目录
 
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v1
-        with:
-          artifact_name: github-pages # 确保名称匹配
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: actions/deploy-pages@v2

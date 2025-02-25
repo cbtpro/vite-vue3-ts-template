@@ -35,17 +35,6 @@ jobs:
 
       - name: 设置 Node.js 版本
         uses: pnpm/action-setup@v4.1.0
-        with:
-          # Version of pnpm to install
-          version: # optional
-          # Where to store pnpm files
-          dest: # optional, default is ~/setup-pnpm
-          # If specified, run `pnpm install`
-          run_install: # optional, default is null
-          # File path to the package.json to read "packageManager" configuration
-          package_json_file: # optional, default is package.json
-          # When set to true, @pnpm/exe, which is a Node.js bundled package, will be installed, enabling using pnpm without Node.js.
-          standalone: # optional, default is false
 
       - name: 安装依赖
         run: pnpm install

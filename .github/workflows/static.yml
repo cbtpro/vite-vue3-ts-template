@@ -37,7 +37,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18 # ✅ 指定 Node.js 版本
-          cache: 'npm' # ✅ 缓存 npm 依赖，加快安装速度
+          cache: 'pnpm' # ✅ 缓存 pnpm 依赖，加快安装速度
       - name: 安装pnpm
         run: npm install -g pnpm
 

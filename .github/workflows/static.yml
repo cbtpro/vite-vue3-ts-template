@@ -43,7 +43,7 @@ jobs:
       - name: 检查 dist 目录是否存在
         run: ls -l dist # 确保 dist 目录存在
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: github-pages # 这里必须使用 "github-pages" 这个名称
           path: dist # 你的构建产物目录

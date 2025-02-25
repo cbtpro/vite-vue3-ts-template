@@ -1,4 +1,4 @@
-# Simple workflow for deploying static content to GitHub Pages
+# Simple workflow for deploying static content to Pages
 name: Deploy static content to Pages
 
 on:
@@ -9,10 +9,10 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   pages: write # 允许写入 GitHub Pages
   id-token: write # 允许身份验证
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -23,51 +23,41 @@ jobs:
       - name: 设置 Node.js 版本
         uses: pnpm/action-setup@v4.1.0
         with:
-          # Version of pnpm to install
           version: 10.4.1 # optional
-          # Where to store pnpm files
-          #dest: # optional, default is ~/setup-pnpm
-          # If specified, run `pnpm install`
-          #run_install: # optional, default is null
-          # File path to the package.json to read "packageManager" configuration
-          #package_json_file: # optional, default is package.json
-          # When set to true, @pnpm/exe, which is a Node.js bundled package, will be installed, enabling using pnpm without Node.js.
-          #standalone: # optional, default is false
 
       - name: 安装依赖
         run: pnpm install
 
-      - name: build项目
+      - name: 构建项目
         run: pnpm run build:prod
 
       - name: 检查 dist 目录是否存在
         run: ls -l dist # 确保 dist 目录存在
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: github-pages # 这里必须使用 "github-pages" 这个名称
           path: dist # 你的构建产物目录
-      - name: setup permission
-        run: chmod -R a+rX ./
 
-  # Deploy job
   deploy:
-    # Add a dependency to the build job
     needs: build
-
-    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
     permissions:
       pages: write # to deploy to Pages
       id-token: write # to verify the deployment originates from an appropriate source
 
-    # Deploy to the github-pages environment
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
-    # Specify runner + deployment step
     runs-on: ubuntu-latest
     steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: github-pages
+          path: dist
+
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4 # or specific "vX.X.X" version tag for this action
+        uses: actions/deploy-pages@v4

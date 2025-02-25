@@ -62,5 +62,3 @@ jobs:
         with:
           branch: gh-pages # 将构建结果发布到 gh-pages 分支
           folder: dist # Vite 默认构建目录为 build，可以根据你的配置修改
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub 提供的自动生成 token，用于认证操作

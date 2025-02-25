@@ -45,9 +45,9 @@ jobs:
         run: ls -l dist # 确保 dist 目录存在
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v2 # 这里应该是 v2
         with:
           path: dist # 你的构建产物目录
 
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v2 # 确保 deploy 还是 v2

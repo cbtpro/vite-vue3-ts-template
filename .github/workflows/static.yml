@@ -56,17 +56,19 @@ jobs:
       - name: 检查 dist 目录是否存在
         run: ls -l dist # 确保 dist 目录存在
 
-      # 配置 Git 用户信息 (防止 git 操作失败)
-      - name: Set Git user
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
 
-      # 部署到 GitHub Pages
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
-          branch: gh-pages # 将构建结果发布到 gh-pages 分支
-          folder: dist # Vite 默认构建目录为 build，可以根据你的配置修改
+          name: github-pages # 添加 artifact_name，和 deploy-pages@v1 保持一致
+          path: 'dist'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
+        with:
+          artifact_name: github-pages # 确保名称匹配
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub 提供的自动生成 token，用于认证操作
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

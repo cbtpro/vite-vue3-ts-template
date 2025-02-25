@@ -45,7 +45,7 @@ jobs:
         run: ls -l dist # 确保 dist 目录存在
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v4
         with:
           path: dist # 你的构建产物目录
 

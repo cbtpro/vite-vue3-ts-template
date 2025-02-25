@@ -47,6 +47,8 @@ jobs:
         with:
           name: github-pages # 这里必须使用 "github-pages" 这个名称
           path: dist # 你的构建产物目录
+      - name: setup permission
+        run: chmod -R a+rX ./
 
   # Deploy job
   deploy:

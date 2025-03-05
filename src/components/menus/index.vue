@@ -31,6 +31,10 @@ const menus = ref([
     name: 'amap',
     to: '/demo/amap',
   },
+  {
+    name: 'demo1',
+    to: '/demo/demo1',
+  },
 ]);
 </script>
 

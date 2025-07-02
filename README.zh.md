@@ -69,3 +69,10 @@ git push
 - 生成海报
 - 二维码
 - 添加@trivago/prettier-plugin-sort-imports 对引入进行排序
+
+## 开发步骤
+
+```
+corepack enable
+pnpm install
+```

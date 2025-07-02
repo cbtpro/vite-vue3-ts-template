@@ -2,6 +2,7 @@ import { fileURLToPath, URL } from 'node:url';
 import { defineConfig, ServerOptions } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { visualizer } from 'rollup-plugin-visualizer';
+import generateVersionPlugin from './plugins/version-generator';
 import { qrcode } from 'vite-plugin-qrcode';
 
 /** 如果是在codespace环境 */
@@ -30,7 +31,7 @@ export default defineConfig(() => {
   return {
     base: './',
     server: serverOptions,
-    plugins: [vue(), qrcode()],
+    plugins: [vue(), qrcode(), generateVersionPlugin()],
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),

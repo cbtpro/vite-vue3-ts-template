@@ -12,44 +12,53 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { type CreateAxiosDefaults } from 'axios';
-import { BASE_URL } from '@/config';
+interface IResponseBody<T> {
+  success: boolean;
+  message: string;
+  data: T;
+}
 
-const config: CreateAxiosDefaults = {
-  baseURL: BASE_URL,
-  timeout: 5000,
-  headers: {
-    'X-Requested-With': 'XMLHttpRequest',
-    'X-TOKEN': '',
-  },
-  responseType: 'json',
-};
-export default config;
+interface IRetryConfig {
+  maxRetries?: number;
+  retryDelay?: number;
+  retryDelayMultiplier?: number;
+  maxRetryDelay?: number;
+  retryCondition?: (error: any) => boolean;
+}
 
-// 重试配置
-export const RETRY_CONFIG: IRetryConfig = {
-  maxRetries: 3,
-  retryDelay: 1000,
-  retryDelayMultiplier: 2,
-  maxRetryDelay: 10000,
-};
-
-// 监控配置
-export const MONITOR_CONFIG: IMonitorConfig = {
+interface IMonitorConfig {
   /**
    * 仅在dev环境开启
    */
-  enabled: process.env.NODE_ENV === 'development',
+  enabled: boolean;
   /**
    * 每分钟请求次数告警阈值
    */
-  warningThreshold: 10,
+  warningThreshold: number;
   /**
    * 慢请求阈值(ms)
    */
-  slowRequestThreshold: 3000,
+  slowRequestThreshold: number;
   /**
    * 统计窗口时间(ms)
    */
-  statisticsWindow: 60000,
-};
+  statisticsWindow: number;
+}
+
+interface IRequestConfig {
+  retry?: RetryConfig;
+  skipMonitor?: boolean;
+  [key: string]: any;
+}
+
+interface IRequestStats {
+  url: string;
+  count: number;
+  lastRequestTime: number;
+  averageResponseTime: number;
+  totalResponseTime: number;
+}
+
+export interface IMonitorStats {
+  [url: string]: RequestStats;
+}

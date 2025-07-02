@@ -32,3 +32,5 @@ stats.html
 .flaskenv*
 !.env.project
 !.env.vault
+
+public/version.json

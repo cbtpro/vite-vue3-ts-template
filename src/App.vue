@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router';
 import Menus from '@/components/menus/index.vue';
+import VersionNotification from '@/components/app/VersionNotification.vue';
 </script>
 
 <template>
@@ -10,6 +11,7 @@ import Menus from '@/components/menus/index.vue';
       <component :is="Component" />
     </keep-alive>
   </router-view>
+  <VersionNotification :check-version-duration="1" />
 </template>
 
 <style scoped>

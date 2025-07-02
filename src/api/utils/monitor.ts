@@ -1,5 +1,4 @@
-// 请求监控工具
-import { MONITOR_CONFIG } from '../config.default';
+import { MONITOR_CONFIG } from '@/config';
 
 export class RequestMonitor {
   private stats: IMonitorStats = {};
@@ -43,15 +42,14 @@ export class RequestMonitor {
 
   private checkForWarnings(url: string, responseTime: number): void {
     const stat = this.stats[url];
-    const now = Date.now();
 
     // 检查频繁请求告警
     const recentRequests = this.getRecentRequestCount(url);
     if (recentRequests > MONITOR_CONFIG.warningThreshold) {
       console.warn(
         `⚠️ 频繁请求告警: ${url}\n` +
-          `最近1分钟内请求 ${recentRequests} 次，超过阈值 ${MONITOR_CONFIG.warningThreshold}\n` +
-          `建议检查是否存在重复请求或考虑添加防抖/节流机制`,
+        `最近1分钟内请求 ${recentRequests} 次，超过阈值 ${MONITOR_CONFIG.warningThreshold}\n` +
+        `建议检查是否存在重复请求或考虑添加防抖/节流机制`,
       );
     }
 
@@ -59,8 +57,8 @@ export class RequestMonitor {
     if (responseTime > MONITOR_CONFIG.slowRequestThreshold) {
       console.warn(
         `🐌 慢请求告警: ${url}\n` +
-          `响应时间: ${responseTime}ms，超过阈值 ${MONITOR_CONFIG.slowRequestThreshold}ms\n` +
-          `平均响应时间: ${Math.round(stat.averageResponseTime)}ms`,
+        `响应时间: ${responseTime}ms，超过阈值 ${MONITOR_CONFIG.slowRequestThreshold}ms\n` +
+        `平均响应时间: ${Math.round(stat.averageResponseTime)}ms`,
       );
     }
   }
@@ -97,11 +95,11 @@ export class RequestMonitor {
     }
   }
 
-  getStats(): MonitorStats {
+  getStats(): IMonitorStats {
     return { ...this.stats };
   }
 
-  getTopRequests(limit: number = 10): RequestStats[] {
+  getTopRequests(limit: number = 10): IRequestStats[] {
     return Object.values(this.stats)
       .sort((a, b) => b.count - a.count)
       .slice(0, limit);

@@ -1,15 +1,15 @@
-// 重试工具函数
-import { RETRY_CONFIG } from '../config.default';
+import { RETRY_CONFIG } from '@/config';
 
 export class RetryHandler {
   private config: Required<IRetryConfig>;
 
   constructor(config?: IRetryConfig) {
     this.config = {
-      maxRetries: config?.maxRetries ?? RETRY_CONFIG.maxRetries,
-      retryDelay: config?.retryDelay ?? RETRY_CONFIG.retryDelay,
-      retryDelayMultiplier: config?.retryDelayMultiplier ?? RETRY_CONFIG.retryDelayMultiplier,
-      maxRetryDelay: config?.maxRetryDelay ?? RETRY_CONFIG.maxRetryDelay,
+      maxRetries: config?.maxRetries ?? (RETRY_CONFIG.maxRetries as number),
+      retryDelay: config?.retryDelay ?? (RETRY_CONFIG.retryDelay as number),
+      retryDelayMultiplier:
+        config?.retryDelayMultiplier ?? (RETRY_CONFIG.retryDelayMultiplier as number),
+      maxRetryDelay: config?.maxRetryDelay ?? (RETRY_CONFIG.maxRetryDelay as number),
       retryCondition: config?.retryCondition ?? this.defaultRetryCondition,
     };
   }
@@ -56,7 +56,7 @@ export class RetryHandler {
         }
 
         return result;
-      } catch (error) {
+      } catch (error: any) {
         lastError = error;
 
         // 如果是最后一次尝试，直接抛出错误

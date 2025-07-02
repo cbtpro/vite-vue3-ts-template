@@ -40,6 +40,11 @@ const demos: RouteRecordRaw = {
       path: 'demo1',
       component: () => import('@/views/demo/demo.vue'),
     },
+    {
+      name: 'http-demo',
+      path: 'http-demo',
+      component: () => import('@/views/demo/http-demo/index.vue'),
+    },
   ],
 };
 

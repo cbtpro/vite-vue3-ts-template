@@ -15,10 +15,15 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import defaultConfig from './config.default';
 import { useInterceptors } from './interceptors';
+import { RetryHandler } from './utils/retry';
+import { RequestMonitor } from './utils/monitor';
 
 export const useApi = () => {
   // 使用默认配置创建请求实例
   const axiosInstance = axios.create(defaultConfig);
+
+  // 创建监控实例
+  const monitor = new RequestMonitor();
 
   const {
     requestErrorHandle,
@@ -36,23 +41,83 @@ export const useApi = () => {
   // 添加响应拦截器
   axiosInstance.interceptors.response.use(responseInterceptor, responseErrorHandler);
 
-  const request = <T>(config: AxiosRequestConfig) => {
+  const request = <T>(config: AxiosRequestConfig & IRequestConfig) => {
     return new Promise<IResponseBody<T>>((resolve, reject) => {
-      // 加载loading
-      axiosInstance<Promise<IResponseBody<T>>>(config)
+      const startTime = Date.now();
+      const { retry, skipMonitor, ...axiosConfig } = config;
+
+      // 创建重试处理器
+      const retryHandler = new RetryHandler(retry);
+
+      // 执行请求的函数
+      const executeRequest = () => {
+        return axiosInstance<IResponseBody<T>>(axiosConfig);
+      };
+
+      // 使用重试机制执行请求
+      retryHandler
+        .execute(executeRequest)
         .then(response => {
+          const responseTime = Date.now() - startTime;
+
+          // 记录请求监控数据
+          if (!skipMonitor && config.url) {
+            monitor.recordRequest(config.url, responseTime);
+          }
+
           resolve(response.data);
         })
         .catch(error => {
+          const responseTime = Date.now() - startTime;
+
+          // 即使失败也记录监控数据
+          if (!skipMonitor && config.url) {
+            monitor.recordRequest(config.url, responseTime);
+          }
+
           reject(error);
-        })
-        .finally(() => {
-          // 隐藏loading
         });
     });
   };
 
+  // 便捷方法
+  const get = <T>(url: string, config?: IRequestConfig) => {
+    return request<IResponseBody<T>>({ ...config, method: 'GET', url });
+  };
+
+  const post = <T>(url: string, data?: any, config?: IRequestConfig) => {
+    return request<IResponseBody<T>>({ ...config, method: 'POST', url, data });
+  };
+
+  const put = <T>(url: string, data?: any, config?: IRequestConfig) => {
+    return request<IResponseBody<T>>({ ...config, method: 'PUT', url, data });
+  };
+
+  const del = <T>(url: string, config?: IRequestConfig) => {
+    return request<IResponseBody<T>>({ ...config, method: 'DELETE', url });
+  };
+
+  // 监控相关方法
+  const getRequestStats = (): IMonitorStats => {
+    return monitor.getStats();
+  };
+
+  const getTopRequests = (limit?: number) => {
+    return monitor.getTopRequests(limit);
+  };
+
+  const clearStats = () => {
+    monitor.clearStats();
+  };
+
   return {
     request,
+    get,
+    post,
+    put,
+    delete: del,
+    getRequestStats,
+    getTopRequests,
+    clearStats,
   };
 };

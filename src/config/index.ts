@@ -26,3 +26,22 @@ export const AMAP_SECURITY_KEY = <string>import.meta.env.VITE_AMAP_SECURITY_KEY;
 
 export const DATE_FMT = 'YYYY-MM-DD';
 export const TIME_FMT = 'YYYY-MM-DD HH:mm:ss';
+
+// 重试配置
+export const RETRY_CONFIG: IRetryConfig = {
+  /**
+   * 最大重试次数
+   */
+  maxRetries: 3,
+  retryDelay: 2000,
+  retryDelayMultiplier: 2,
+  maxRetryDelay: 10000,
+};
+
+// 监控配置
+export const MONITOR_CONFIG: IMonitorConfig = {
+  enabled: isDev,
+  warningThreshold: 10, // 每分钟请求次数告警阈值
+  slowRequestThreshold: 3000, // 慢请求阈值(ms)
+  statisticsWindow: 60000, // 统计窗口时间(ms)
+};

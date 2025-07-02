@@ -11,18 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-export {};
 
-import './request';
-import './mock';
-/**
- * 测试对象
- */
-interface ITest {
-  /** 返回消息 */
-  message: string;
-  now: number;
-}
+/// <reference path="mock.d.ts" />
+/// <reference path="request.d.ts" />
 
 /**
  * 权限对象
@@ -34,3 +25,4 @@ interface IAuthority {
   updateTime: number;
   createTime: number;
 }
+

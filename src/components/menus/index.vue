@@ -35,6 +35,10 @@ const menus = ref([
     name: 'demo1',
     to: '/demo/demo1',
   },
+  {
+    name: 'http-demo',
+    to: '/demo/http-demo',
+  },
 ]);
 </script>
 

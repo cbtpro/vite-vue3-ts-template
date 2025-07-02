@@ -69,7 +69,7 @@ echarts.use([
   CanvasRenderer,
 ]);
 
-const props = withDefaults(defineProps<{ title?: string }>(), {
+const props = withDefaults(defineProps<{ title?: string; }>(), {
   title: 'ECharts 入门示例',
 });
 

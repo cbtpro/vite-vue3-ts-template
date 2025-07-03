@@ -22,7 +22,7 @@ export const test = http.get(/\/api\/index\/test/, (options, ...rest) => {
   // 获取请求参数
   const username = params.get('username');
   return HttpResponse.json(
-    builder<ITest>({
+    builder<IMockTest>({
       message: `你好，${username}`,
       now: Date.now(),
     }),

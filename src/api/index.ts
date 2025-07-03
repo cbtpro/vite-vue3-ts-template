@@ -82,19 +82,19 @@ export const useApi = () => {
 
   // 便捷方法
   const get = <T>(url: string, config?: IRequestConfig) => {
-    return request<IResponseBody<T>>({ ...config, method: 'GET', url });
+    return request<T>({ ...config, method: 'GET', url });
   };
 
   const post = <T>(url: string, data?: any, config?: IRequestConfig) => {
-    return request<IResponseBody<T>>({ ...config, method: 'POST', url, data });
+    return request<T>({ ...config, method: 'POST', url, data });
   };
 
   const put = <T>(url: string, data?: any, config?: IRequestConfig) => {
-    return request<IResponseBody<T>>({ ...config, method: 'PUT', url, data });
+    return request<T>({ ...config, method: 'PUT', url, data });
   };
 
   const del = <T>(url: string, config?: IRequestConfig) => {
-    return request<IResponseBody<T>>({ ...config, method: 'DELETE', url });
+    return request<T>({ ...config, method: 'DELETE', url });
   };
 
   // 监控相关方法

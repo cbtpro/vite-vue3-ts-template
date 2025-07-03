@@ -63,6 +63,7 @@
     "commitizen": "^4.3.1",
     "cz-conventional-changelog": "^3.3.0",
     "dotenv": "^16.4.1",
+    "eslint": "^9.30.1",
     "eslint-plugin-playwright": "^2.2.0",
     "eslint-plugin-vue": "~10.2.0",
     "git-cz": "^4.9.0",

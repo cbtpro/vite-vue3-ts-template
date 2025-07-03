@@ -48,8 +48,8 @@ export class RequestMonitor {
     if (recentRequests > MONITOR_CONFIG.warningThreshold) {
       console.warn(
         `⚠️ 频繁请求告警: ${url}\n` +
-        `最近1分钟内请求 ${recentRequests} 次，超过阈值 ${MONITOR_CONFIG.warningThreshold}\n` +
-        `建议检查是否存在重复请求或考虑添加防抖/节流机制`,
+          `最近1分钟内请求 ${recentRequests} 次，超过阈值 ${MONITOR_CONFIG.warningThreshold}\n` +
+          `建议检查是否存在重复请求或考虑添加防抖/节流机制`,
       );
     }
 
@@ -57,8 +57,8 @@ export class RequestMonitor {
     if (responseTime > MONITOR_CONFIG.slowRequestThreshold) {
       console.warn(
         `🐌 慢请求告警: ${url}\n` +
-        `响应时间: ${responseTime}ms，超过阈值 ${MONITOR_CONFIG.slowRequestThreshold}ms\n` +
-        `平均响应时间: ${Math.round(stat.averageResponseTime)}ms`,
+          `响应时间: ${responseTime}ms，超过阈值 ${MONITOR_CONFIG.slowRequestThreshold}ms\n` +
+          `平均响应时间: ${Math.round(stat.averageResponseTime)}ms`,
       );
     }
   }

@@ -7,7 +7,7 @@ import { qrcode } from 'vite-plugin-qrcode';
 import generateVersionPlugin from './plugins/version-generator';
 
 /** 如果是在codespace环境 */
-const isCodeSpaces = process.env.CODESPACES === 'true';
+// const isCodeSpaces = process.env.CODESPACES === 'true';
 
 const serverOptions: ServerOptions = {
   host: true,

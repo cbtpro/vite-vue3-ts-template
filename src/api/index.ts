@@ -85,11 +85,11 @@ export const useApi = () => {
     return request<T>({ ...config, method: 'GET', url });
   };
 
-  const post = <T>(url: string, data?: any, config?: IRequestConfig) => {
+  const post = <T>(url: string, data?: unknown, config?: IRequestConfig) => {
     return request<T>({ ...config, method: 'POST', url, data });
   };
 
-  const put = <T>(url: string, data?: any, config?: IRequestConfig) => {
+  const put = <T>(url: string, data?: unknown, config?: IRequestConfig) => {
     return request<T>({ ...config, method: 'PUT', url, data });
   };
 

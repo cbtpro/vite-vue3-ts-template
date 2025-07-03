@@ -10,7 +10,7 @@ const binarySearch = ({ max, getValue, match }: IBinarySearchOption) => {
   let min = 0;
 
   while (min <= max) {
-    let guess = Math.floor((min + max) / 2);
+    const guess = Math.floor((min + max) / 2);
     const compareVal = getValue(guess);
 
     if (compareVal === match) {
@@ -56,7 +56,7 @@ const measureText: MeasureText = (str = '', styles) => {
 };
 type FitString = (str: string, maxWidth: number, styles?: CSSProperties) => string;
 export const fitString: FitString = (str, maxWidth, styles = defaultStyles) => {
-  let width = measureText(str, styles);
+  const width = measureText(str, styles);
   const ellipsis = '…';
   const ellipsisWidth = measureText(ellipsis, styles);
   if (width <= maxWidth || width <= ellipsisWidth) {

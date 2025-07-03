@@ -1,6 +1,5 @@
 {
-  "name": "vite-vue3-ts-template",
-  "private": true,
+  "name": "vite-vue3-ts-template-new",
   "version": "0.0.0",
   "type": "module",
   "scripts": {

@@ -32,5 +32,8 @@ stats.html
 .flaskenv*
 !.env.project
 !.env.vault
+.env.development
 
 public/version.json
+test-results/
+playwright-report

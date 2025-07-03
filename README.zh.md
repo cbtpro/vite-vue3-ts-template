@@ -76,3 +76,15 @@ git push
 corepack enable
 pnpm install
 ```
+
+复制一个`.env.development`，并修改配置作为本地开发的配置文件。
+
+```shell
+cp .env .env.development
+```
+
+## E2E测试
+
+```shell
+pnpm exec playwright install
+```

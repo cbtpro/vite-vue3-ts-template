@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import Tab, { TabItem } from '@/components/tab/index.vue';
+import Tab, { type TabItem } from '@/components/tab/index.vue';
 
 enum INFO_TYPE_ENUM {
   INFO = 'INFO',

@@ -1,4 +1,4 @@
-import { CSSProperties } from 'vue';
+import type { CSSProperties } from 'vue';
 import { isValidKey } from './common';
 
 interface IBinarySearchOption {

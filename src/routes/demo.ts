@@ -1,4 +1,4 @@
-import { RouteRecordRaw } from 'vue-router';
+import { type RouteRecordRaw } from 'vue-router';
 import Home from '@/views/demo/index.vue';
 
 const demos: RouteRecordRaw = {

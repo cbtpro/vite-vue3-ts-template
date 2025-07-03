@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { type AxiosRequestConfig } from 'axios';
 import defaultConfig from './config.default';
 import { useInterceptors } from './interceptors';
 import { RetryHandler } from './utils/retry';

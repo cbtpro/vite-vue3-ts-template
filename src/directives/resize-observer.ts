@@ -1,4 +1,4 @@
-import { DirectiveBinding, Directive } from 'vue';
+import type { DirectiveBinding, Directive } from 'vue';
 
 export const ResizeObserver: Directive = {
   mounted(el, binding: DirectiveBinding<any>) {

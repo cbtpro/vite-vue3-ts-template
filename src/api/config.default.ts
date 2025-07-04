@@ -52,4 +52,6 @@ export const MONITOR_CONFIG: IMonitorConfig = {
    * 统计窗口时间(ms)
    */
   statisticsWindow: 60000,
+  /** 是否自动清理过期数据 */
+  autoCleanup: false,
 };

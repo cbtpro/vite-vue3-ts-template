@@ -17,6 +17,7 @@ import defaultConfig from './config.default';
 import { useInterceptors } from './interceptors';
 import { RetryHandler } from './utils/retry';
 import { RequestMonitor } from './utils/monitor';
+import { RequestCancelManager } from './utils/cancel';
 
 export const useApi = () => {
   // 使用默认配置创建请求实例
@@ -24,6 +25,9 @@ export const useApi = () => {
 
   // 创建监控实例
   const monitor = new RequestMonitor();
+
+  // 创建取消管理器实例
+  const cancelManager = new RequestCancelManager();
 
   const {
     requestErrorHandle,
@@ -41,7 +45,7 @@ export const useApi = () => {
   // 添加响应拦截器
   axiosInstance.interceptors.response.use(responseInterceptor, responseErrorHandler);
 
-  const request = <T>(config: AxiosRequestConfig & IRequestConfig) => {
+  const request = <T>(config: IRequestConfig & AxiosRequestConfig) => {
     return new Promise<IResponseBody<T>>((resolve, reject) => {
       const startTime = Date.now();
       const { retry, skipMonitor, ...axiosConfig } = config;
@@ -60,6 +64,9 @@ export const useApi = () => {
         .then(response => {
           const responseTime = Date.now() - startTime;
 
+          // 清理请求取消管理器中的记录
+          cancelManager.handleRequestAfter(config);
+
           // 记录请求监控数据
           if (!skipMonitor && config.url) {
             monitor.recordRequest(config.url, responseTime);
@@ -70,9 +77,19 @@ export const useApi = () => {
         .catch(error => {
           const responseTime = Date.now() - startTime;
 
+          const isCanceled = RequestCancelManager.isCancelError(error);
+
+          // 清理请求取消管理器中的记录
+          cancelManager.handleRequestAfter(config);
+
           // 即使失败也记录监控数据
           if (!skipMonitor && config.url) {
             monitor.recordRequest(config.url, responseTime);
+          }
+
+          // 如果是取消错误，提供更友好的错误信息
+          if (isCanceled) {
+            console.log(`🚫 请求已取消: ${config.method?.toUpperCase()} ${config.url}`);
           }
 
           reject(error);
@@ -81,19 +98,19 @@ export const useApi = () => {
   };
 
   // 便捷方法
-  const get = <T>(url: string, config?: IRequestConfig) => {
+  const get = <T>(url: string, config?: IRequestConfig & AxiosRequestConfig) => {
     return request<T>({ ...config, method: 'GET', url });
   };
 
-  const post = <T>(url: string, data?: unknown, config?: IRequestConfig) => {
+  const post = <T>(url: string, data?: unknown, config?: IRequestConfig & AxiosRequestConfig) => {
     return request<T>({ ...config, method: 'POST', url, data });
   };
 
-  const put = <T>(url: string, data?: unknown, config?: IRequestConfig) => {
+  const put = <T>(url: string, data?: unknown, config?: IRequestConfig & AxiosRequestConfig) => {
     return request<T>({ ...config, method: 'PUT', url, data });
   };
 
-  const del = <T>(url: string, config?: IRequestConfig) => {
+  const del = <T>(url: string, config?: IRequestConfig & AxiosRequestConfig) => {
     return request<T>({ ...config, method: 'DELETE', url });
   };
 
@@ -109,6 +126,26 @@ export const useApi = () => {
   const clearStats = () => {
     monitor.clearStats();
   };
+  const manualCleanup = () => {
+    monitor.manualCleanup();
+  };
+
+  // 取消相关方法
+  const cancelRequest = (requestKey: string, reason?: string) => {
+    return cancelManager.cancelRequest(requestKey, reason);
+  };
+
+  const cancelAllRequests = (reason?: string) => {
+    return cancelManager.cancelAllRequests(reason);
+  };
+
+  const getPendingRequestCount = () => {
+    return cancelManager.getPendingRequestCount();
+  };
+
+  const getPendingRequestKeys = () => {
+    return cancelManager.getPendingRequestKeys();
+  };
 
   return {
     request,
@@ -119,5 +156,10 @@ export const useApi = () => {
     getRequestStats,
     getTopRequests,
     clearStats,
+    manualCleanup,
+    cancelRequest,
+    cancelAllRequests,
+    getPendingRequestCount,
+    getPendingRequestKeys,
   };
 };

@@ -15,7 +15,7 @@
 import { http, HttpResponse } from 'msw';
 import { builder } from '@/mocks/build';
 
-export const test = http.get(/\/api\/index\/test/, (options, ...rest) => {
+export const test = http.get(/\/index\/test/, (options, ...rest) => {
   console.log(options, rest);
   const url = new window.URL(options.request.url);
   const params = new window.URLSearchParams(url.search);

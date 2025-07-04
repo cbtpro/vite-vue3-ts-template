@@ -3,19 +3,50 @@ import { MONITOR_CONFIG } from '@/config';
 export class RequestMonitor {
   private stats: IMonitorStats = {};
   private enabled: boolean;
+  private config: IMonitorConfig;
+  private cleanupTimer?: NodeJS.Timeout;
 
-  constructor() {
-    this.enabled = MONITOR_CONFIG.enabled;
+  constructor(config?: Partial<IMonitorConfig>) {
+    this.config = {
+      ...MONITOR_CONFIG,
+      autoCleanup: true, // 默认启用自动清理
+      ...config,
+    };
 
-    if (this.enabled) {
-      // 定期清理过期统计数据
-      setInterval(() => {
-        this.cleanupExpiredStats();
-      }, MONITOR_CONFIG.statisticsWindow);
+    this.enabled = this.config.enabled;
+
+    if (this.enabled && this.config.autoCleanup) {
+      // 启动自动清理定时器
+      this.startAutoCleanup();
     }
   }
 
-  recordRequest(url: string, responseTime: number): void {
+  /**
+   * 启动自动清理定时器
+   */
+  private startAutoCleanup(): void {
+    if (this.cleanupTimer) {
+      clearInterval(this.cleanupTimer);
+    }
+
+    this.cleanupTimer = setInterval(() => {
+      this.cleanupExpiredStats();
+    }, this.config.statisticsWindow);
+
+    console.log(`🧹 自动清理已启用，清理间隔: ${this.config.statisticsWindow}ms`);
+  }
+  /**
+   * 停止自动清理定时器
+   */
+  private stopAutoCleanup(): void {
+    if (this.cleanupTimer) {
+      clearInterval(this.cleanupTimer);
+      this.cleanupTimer = undefined;
+      console.log('🛑 自动清理已停止');
+    }
+  }
+
+  recordRequest(url: string, responseTime: number, isCanceled: boolean = false): void {
     if (!this.enabled) return;
 
     const now = Date.now();
@@ -27,17 +58,33 @@ export class RequestMonitor {
         lastRequestTime: now,
         averageResponseTime: 0,
         totalResponseTime: 0,
+        successCount: 0,
+        errorCount: 0,
+        minResponseTime: responseTime,
+        maxResponseTime: responseTime,
+        cancelCount: 0,
       };
     }
 
     const stat = this.stats[url];
     stat.count++;
     stat.lastRequestTime = now;
-    stat.totalResponseTime += responseTime;
-    stat.averageResponseTime = stat.totalResponseTime / stat.count;
+    if (isCanceled) {
+      stat.cancelCount = (stat.cancelCount || 0) + 1;
+    } else {
+      stat.totalResponseTime += responseTime;
+      const successfulRequests = stat.count - (stat.cancelCount || 0);
+      if (successfulRequests > 0) {
+        stat.averageResponseTime = stat.totalResponseTime / successfulRequests;
+      }
+      stat.minResponseTime = Math.min(stat.minResponseTime, responseTime);
+      stat.maxResponseTime = Math.max(stat.maxResponseTime, responseTime);
+    }
 
-    // 检查是否需要告警
-    this.checkForWarnings(url, responseTime);
+    // 检查是否需要告警（只对非取消的请求进行告警检查）
+    if (!isCanceled) {
+      this.checkForWarnings(url, responseTime);
+    }
   }
 
   private checkForWarnings(url: string, responseTime: number): void {
@@ -92,6 +139,48 @@ export class RequestMonitor {
 
     if (expiredUrls.length > 0) {
       console.log(`🧹 清理了 ${expiredUrls.length} 个过期的请求统计记录`);
+    }
+  }
+
+  /**
+   * 手动清理过期统计数据
+   */
+  manualCleanup(): number {
+    const now = Date.now();
+    const expiredUrls: string[] = [];
+
+    for (const [url, stat] of Object.entries(this.stats)) {
+      if (now - stat.lastRequestTime > this.config.statisticsWindow * 2) {
+        expiredUrls.push(url);
+      }
+    }
+
+    expiredUrls.forEach(url => {
+      delete this.stats[url];
+    });
+
+    if (expiredUrls.length > 0) {
+      console.log(`🧹 手动清理了 ${expiredUrls.length} 个过期的请求统计记录`);
+    }
+
+    return expiredUrls.length;
+  }
+
+  /**
+   * 更新监控配置
+   */
+  updateConfig(newConfig: Partial<IMonitorConfig>): void {
+    const oldAutoCleanup = this.config.autoCleanup;
+    this.config = { ...this.config, ...newConfig };
+    this.enabled = this.config.enabled;
+
+    // 如果自动清理配置发生变化，重新设置定时器
+    if (oldAutoCleanup !== this.config.autoCleanup) {
+      if (this.config.autoCleanup && this.enabled) {
+        this.startAutoCleanup();
+      } else {
+        this.stopAutoCleanup();
+      }
     }
   }
 

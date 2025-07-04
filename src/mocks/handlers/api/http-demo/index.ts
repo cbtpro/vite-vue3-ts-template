@@ -14,7 +14,7 @@ const shouldSimulateError = (errorRate = 0.1) => {
 
 export const httpDemo = [
   // 获取用户列表
-  http.get('/api/http-demo/users', async () => {
+  http.get(/\/api\/http-demo\/users/, async () => {
     await randomDelay();
 
     // 10% 概率返回服务器错误（用于测试重试）
@@ -29,10 +29,10 @@ export const httpDemo = [
   }),
 
   // 获取单个用户
-  http.get('/api/http-demo/users/:id', async ({ params }) => {
+  http.get<{ id: string }>('/api/http-demo/users/:id', async ({ params }) => {
     await randomDelay();
 
-    const userId = parseInt(params.id as string);
+    const userId = parseInt(params.id);
     const user = mockUsers.find(u => u.id === userId);
 
     if (!user) {
@@ -46,7 +46,7 @@ export const httpDemo = [
   }),
 
   // 获取文章列表
-  http.get('/api/http-demo/posts', async ({ request }) => {
+  http.get(/api\/http-demo\/posts/, async ({ request }) => {
     await randomDelay();
 
     const url = new URL(request.url);
@@ -61,10 +61,10 @@ export const httpDemo = [
   }),
 
   // 获取单个文章
-  http.get('/api/http-demo/posts/:id', async ({ params }) => {
+  http.get<{ id: string }>('/api/http-demo/posts/:id', async ({ params }) => {
     await randomDelay();
 
-    const postId = parseInt(params.id as string);
+    const postId = parseInt(params.id);
     const post = mockPosts.find(p => p.id === postId);
 
     if (!post) {
@@ -78,7 +78,7 @@ export const httpDemo = [
   }),
 
   // 创建文章
-  http.post('/api/http-demo/posts', async ({ request }) => {
+  http.post(/\/api\/http-demo\/posts/, async ({ request }) => {
     await randomDelay();
 
     const newPost = (await request.json()) as Partial<IMockPost>;
@@ -94,10 +94,10 @@ export const httpDemo = [
   }),
 
   // 更新文章
-  http.put('/api/http-demo/posts/:id', async ({ params, request }) => {
+  http.put<{ id: string }>('/api/http-demo/posts/:id', async ({ params, request }) => {
     await randomDelay();
 
-    const postId = parseInt(params.id as string);
+    const postId = parseInt(params.id);
     const updatedData = (await request.json()) as Partial<IMockPost>;
     const postIndex = mockPosts.findIndex(p => p.id === postId);
 
@@ -113,10 +113,10 @@ export const httpDemo = [
   }),
 
   // 删除文章
-  http.delete('/api/http-demo/posts/:id', async ({ params }) => {
+  http.delete<{ id: string }>('/api/http-demo/posts/:id', async ({ params }) => {
     await randomDelay();
 
-    const postId = parseInt(params.id as string);
+    const postId = parseInt(params.id);
     const postIndex = mockPosts.findIndex(p => p.id === postId);
 
     if (postIndex === -1) {
@@ -131,7 +131,7 @@ export const httpDemo = [
   }),
 
   // 获取评论列表
-  http.get('/api/http-demo/comments', async ({ request }) => {
+  http.get(/api\/http-demo\/comments/, async ({ request }) => {
     await randomDelay();
 
     const url = new URL(request.url);
@@ -146,13 +146,13 @@ export const httpDemo = [
   }),
 
   // 模拟慢请求（用于测试慢请求告警）
-  http.get('/api/http-demo/slow-endpoint', async () => {
+  http.get(/api\/http-demo\/slow-endpoint/, async () => {
     await delay(5000); // 5秒延迟
     return HttpResponse.json({ message: '这是一个慢请求' });
   }),
 
   // 模拟总是失败的请求（用于测试重试机制）
-  http.get('/api/http-demo/always-fail', async () => {
+  http.get(/api\/http-demo\/always-fail/, async () => {
     await randomDelay();
     return new HttpResponse(null, {
       status: 500,
@@ -161,7 +161,7 @@ export const httpDemo = [
   }),
 
   // 模拟间歇性失败的请求
-  http.get('/api/http-demo/sometimes-fail', async () => {
+  http.get(/api\/http-demo\/sometimes-fail/, async () => {
     await randomDelay();
 
     // 50% 概率失败
@@ -176,13 +176,13 @@ export const httpDemo = [
   }),
 
   // 模拟网络超时
-  http.get('/api/http-demo/timeout', async () => {
-    await delay(10000); // 10秒延迟，超过默认超时时间
+  http.get(/api\/http-demo\/timeout/, async () => {
+    await delay(800); // 8秒延迟，超过默认超时时间
     return HttpResponse.json({ message: '这个请求会超时' });
   }),
 
   // 404错误端点
-  http.get('/api/http-demo/nonexistent-endpoint', () => {
+  http.get(/api\/http-demo\/nonexistent-endpoint/, () => {
     return new HttpResponse(null, {
       status: 404,
       statusText: 'Not Found',

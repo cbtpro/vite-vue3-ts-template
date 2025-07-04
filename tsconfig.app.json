@@ -13,6 +13,8 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "typeRoots": ["./types", "./node_modules/@types"]
+    "verbatimModuleSyntax": true,
+    "typeRoots": ["./types", "./node_modules/@types"],
+    "types": []
   }
 }

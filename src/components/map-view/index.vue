@@ -82,7 +82,8 @@ onMounted(() => {
   initAMap();
 });
 onUnmounted(() => {
-  map?.destroy();
+  // 地图组件不同于其他，它一旦销毁，再使用就会报错
+  // map?.destroy();
 });
 </script>
 

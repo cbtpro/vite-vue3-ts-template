@@ -11,6 +11,8 @@ export class RetryHandler {
         config?.retryDelayMultiplier ?? (RETRY_CONFIG.retryDelayMultiplier as number),
       maxRetryDelay: config?.maxRetryDelay ?? (RETRY_CONFIG.maxRetryDelay as number),
       retryCondition: config?.retryCondition ?? this.defaultRetryCondition,
+      strategy: config?.strategy ?? 'exponential',
+      customDelayCalculator: config?.customDelayCalculator ?? this.calculateExponentialDelay,
     };
   }
 
@@ -35,9 +37,76 @@ export class RetryHandler {
     return retryableStatus.includes(error.response.status);
   }
 
-  private calculateDelay(attempt: number): number {
+  /**
+   * 指数退避策略
+   * 延迟时间按指数增长：baseDelay * multiplier^(attempt-1)
+   */
+  private calculateExponentialDelay(attempt: number): number {
     const delay = this.config.retryDelay * Math.pow(this.config.retryDelayMultiplier, attempt - 1);
     return Math.min(delay, this.config.maxRetryDelay);
+  }
+  /**
+   * 固定间隔策略
+   * 每次重试都使用相同的延迟时间
+   */
+  private calculateFixedDelay(attempt: number): number {
+    return Math.min(this.config.retryDelay, this.config.maxRetryDelay);
+  }
+
+  /**
+   * 线性增长策略
+   * 延迟时间线性递增：baseDelay * attempt
+   */
+  private calculateLinearDelay(attempt: number): number {
+    const delay = this.config.retryDelay * attempt;
+    return Math.min(delay, this.config.maxRetryDelay);
+  }
+  /**
+   * 计算重试延迟时间
+   * 根据配置的策略选择相应的计算方法
+   */
+  private calculateDelay(attempt: number): number {
+    switch (this.config.strategy) {
+      case 'exponential':
+        return this.calculateExponentialDelay(attempt);
+
+      case 'fixed':
+        return this.calculateFixedDelay(attempt);
+
+      case 'linear':
+        return this.calculateLinearDelay(attempt);
+
+      case 'custom':
+        if (this.config.customDelayCalculator) {
+          const customDelay = this.config.customDelayCalculator(attempt, this.config.retryDelay);
+          return Math.min(customDelay, this.config.maxRetryDelay);
+        }
+        // 如果没有提供自定义函数，回退到指数退避
+        console.warn('自定义重试策略未提供计算函数，回退到指数退避策略');
+        return this.calculateExponentialDelay(attempt);
+
+      default:
+        console.warn(`未知的重试策略: ${this.config.strategy}，使用指数退避策略`);
+        return this.calculateExponentialDelay(attempt);
+    }
+  }
+
+  /**
+   * 获取策略描述信息
+   */
+  private getStrategyDescription(): string {
+    switch (this.config.strategy) {
+      case 'exponential':
+        return `指数退避 (${this.config.retryDelay}ms × ${this.config.retryDelayMultiplier}^n)`;
+      case 'fixed':
+        return `固定间隔 (${this.config.retryDelay}ms)`;
+      case 'linear':
+        return `线性增长 (${this.config.retryDelay}ms × n)`;
+      case 'custom':
+        return '自定义策略';
+      default:
+        return '未知策略';
+    }
   }
 
   private sleep(ms: number): Promise<void> {

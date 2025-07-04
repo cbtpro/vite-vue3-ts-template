@@ -36,12 +36,16 @@ export const RETRY_CONFIG: IRetryConfig = {
   retryDelay: 2000,
   retryDelayMultiplier: 2,
   maxRetryDelay: 10000,
+  customDelayCalculator: function (attempt: number, baseDelay: number): number {
+    throw new Error('Function not implemented.');
+  },
 };
 
 // 监控配置
 export const MONITOR_CONFIG: IMonitorConfig = {
   enabled: isDev,
   warningThreshold: 10, // 每分钟请求次数告警阈值
-  slowRequestThreshold: 3000, // 慢请求阈值(ms)
-  statisticsWindow: 60000, // 统计窗口时间(ms)
+  slowRequestThreshold: 800, // 慢请求阈值(ms)
+  statisticsWindow: 60000,
+  autoCleanup: true,
 };

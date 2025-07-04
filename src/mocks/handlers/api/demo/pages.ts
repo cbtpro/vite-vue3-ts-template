@@ -14,6 +14,6 @@
 import { http, HttpResponse } from 'msw';
 import { builder } from '@/mocks/build';
 
-export const pages = http.get(/api\/index\/pages/, () => {
+export const pages = http.get(/index\/pages/, () => {
   return HttpResponse.json(builder<number[]>([820, 932, 901, 934, 1290, 1330, 1320]));
 });

@@ -13,7 +13,7 @@
 // limitations under the License.
 import { http, HttpResponse } from 'msw';
 
-export const example = http.get('https://api.example.com/user', () => {
+export const example = http.get('/api/demo/user', () => {
   return HttpResponse.json({
     firstName: 'John',
     lastName: 'Maverick',
